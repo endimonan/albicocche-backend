@@ -25,7 +25,7 @@ app.use(limiter);
 app.get("/", (req: Request, res: Response) => {
   // Cria um objeto para a resposta
   const response = {
-    message: "Albicocche API v1.0.0",
+    message: "Albicocche API v1.0.0 - In progress",
     status: "success",
   };
 
