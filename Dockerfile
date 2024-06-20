@@ -13,11 +13,14 @@ RUN npm install
 # Copie o restante dos arquivos da aplicação
 COPY . .
 
-# Compile o código TypeScript
-RUN npm run build  
+# Remove dist directory if it exists
+RUN rm -rf dist
 
-# Exponha a porta em que o servidor estará escutando
+# Compile TypeScript to JavaScript
+RUN npm run build
+
+# Expose the port where the server will be listening
 EXPOSE 3000
 
-# Comando para iniciar a aplicação
-CMD ["node", "dist/src/server.js"]
+# Command to start the application
+CMD ["node", "dist/server.js"]

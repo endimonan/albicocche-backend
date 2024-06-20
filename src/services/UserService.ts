@@ -1,7 +1,7 @@
 import User from "../models/User";
 import { PasswordUtil } from "../utils/PasswordUtil";
 import { EmailUtil } from "../utils/EmailUtil";
-import { v4 as uuidv4 } from "uuid";
+import { generateVerificationCode } from "../utils/CodeUtil";
 
 export class UserService {
   async register(email: string, password: string): Promise<User> {
@@ -11,7 +11,7 @@ export class UserService {
     }
 
     const hashedPassword = await PasswordUtil.hashPassword(password);
-    const verificationCode = uuidv4();
+    const verificationCode = generateVerificationCode();
 
     const user = await User.create({
       email,

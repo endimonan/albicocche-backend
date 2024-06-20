@@ -5,6 +5,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL!, {
   logging: true,
 });
 
+
 export const connectDB = async () => {
   try {
     await sequelize.authenticate();
