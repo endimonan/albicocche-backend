@@ -13,9 +13,6 @@ RUN npm install
 # Copie o restante dos arquivos da aplicação
 COPY . .
 
-# Remove dist directory if it exists
-RUN rm -rf dist
-
 # Compile TypeScript to JavaScript
 RUN npm run build
 
