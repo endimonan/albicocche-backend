@@ -1,6 +1,6 @@
 import User from "../models/User";
-import { PasswordUtil } from "../utils/PasswordUtil";
-import { JWTUtil } from "../utils/JWTUtil";
+import { PasswordUtil } from "../utils/security/PasswordUtil";
+import { JWTUtil } from "../utils/security/JWTUtil";
 import { Response } from "express";
 
 export class AuthService {

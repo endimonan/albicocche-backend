@@ -7,6 +7,7 @@ export interface UserDocument extends Document {
   verificationCode: string | null;
   newEmail: string | null;
   emailVerificationCode: string | null;
+  records: mongoose.Types.ObjectId[];
 }
 
 const UserSchema = new Schema<UserDocument>({
@@ -16,6 +17,7 @@ const UserSchema = new Schema<UserDocument>({
   verificationCode: { type: String, default: null },
   newEmail: { type: String, default: null },
   emailVerificationCode: { type: String, default: null },
+  records: [{ type: mongoose.Schema.Types.ObjectId, ref: "Record" }],
 });
 
 const User = mongoose.model<UserDocument>("User", UserSchema);

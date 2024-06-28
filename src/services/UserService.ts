@@ -1,5 +1,5 @@
 import User, { UserDocument } from "../models/User";
-import { PasswordUtil } from "../utils/PasswordUtil";
+import { PasswordUtil } from "../utils/security/PasswordUtil";
 import { EmailUtil } from "../utils/EmailUtil";
 import { generateVerificationCode } from "../utils/CodeUtil";
 import { UpdateUserDTO } from "../dtos/UpdateUserDTO";

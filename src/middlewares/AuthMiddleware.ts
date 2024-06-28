@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { JWTUtil } from "../utils/JWTUtil";
+import { JWTUtil } from "../utils/security/JWTUtil";
 
 export const AuthMiddleware = (
   req: Request,
