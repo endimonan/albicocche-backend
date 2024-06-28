@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { JWTUtil } from "../utils/JWTUtil";
+import { JWTUtil } from "../utils/security/JWTUtil";
 
 export const AuthMiddleware = (
   req: Request,
@@ -15,7 +15,7 @@ export const AuthMiddleware = (
   try {
     const decoded = JWTUtil.verifyToken(token);
     req.body.user = decoded;
-    next(); // Continua para o próximo middleware ou rota
+    next();
   } catch (error) {
     res.status(401).json({ message: "Invalid token" });
   }

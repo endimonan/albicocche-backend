@@ -1,22 +1,17 @@
-import { Sequelize } from "sequelize";
+import mongoose from "mongoose";
 
-const sequelize = new Sequelize(process.env.DATABASE_URL!, {
-  dialect: "postgres",
-  logging: true,
-});
-
-
-export const connectDB = async () => {
+const connectDB = async () => {
   try {
-    await sequelize.authenticate();
-    console.log(
-      "Connection to the database has been established successfully."
-    );
-    await sequelize.sync();
-    console.log("Database synchronized.");
+    const conn = await mongoose.connect(process.env.MONGODB_URI!);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    if (error instanceof Error) {
+      console.error(`Error: ${error.message}`);
+    } else {
+      console.error("Unexpected error", error);
+    }
+    process.exit(1);
   }
 };
 
-export default sequelize;
+export default connectDB;
