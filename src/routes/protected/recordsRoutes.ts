@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { RecordController } from "../controllers/RecordController";
-import { AuthMiddleware } from "../middlewares/AuthMiddleware";
+import { RecordController } from "../../controllers/RecordController";
+import { AuthMiddleware } from "../../middlewares/AuthMiddleware";
 
 const router = Router();
 
