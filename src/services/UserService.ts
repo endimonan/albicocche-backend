@@ -5,7 +5,11 @@ import { generateVerificationCode } from "../utils/CodeUtil";
 import { UpdateUserDTO } from "../dtos/UpdateUserDTO";
 
 export class UserService {
-  async register(email: string, password: string): Promise<UserDocument> {
+  async register(
+    name: string,
+    email: string,
+    password: string
+  ): Promise<UserDocument> {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       throw new Error("User already exists");
@@ -15,6 +19,7 @@ export class UserService {
     const verificationCode = generateVerificationCode();
 
     const user = new User({
+      name,
       email,
       password: hashedPassword,
       verificationCode,

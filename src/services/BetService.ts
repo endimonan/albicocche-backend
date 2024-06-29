@@ -1,10 +1,26 @@
 import Bet, { BetDocument } from "../models/Bet";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
+import User from "../models/User";
+import Record from "../models/Record";
+import { parseISO } from "date-fns";
 import {
   BetLimitValidation,
-  DateValidation,
+  DynamicDateValidation,
   ParticipantValidation,
 } from "../validations";
+
+interface BetDetails {
+  id: string;
+  createdBy: string;
+  participants: {
+    email: string;
+    name: string;
+    totalPoints: number;
+  }[];
+  startDate: string;
+  endDate: string;
+  award: string;
+}
 
 interface BetRequest {
   createdBy: Types.ObjectId;
@@ -31,7 +47,7 @@ export class BetService {
       award,
     };
 
-    const dateValidator = new DateValidation();
+    const dateValidator = new DynamicDateValidation();
     const betLimitValidator = new BetLimitValidation();
     const participantValidator = new ParticipantValidation();
 
@@ -39,14 +55,73 @@ export class BetService {
 
     await dateValidator.validate(request);
 
+    const participantIds: Types.ObjectId[] = [createdBy];
+
+    for (const email of participantEmails) {
+      const user = await User.findOne({ email });
+      if (!user || !mongoose.isValidObjectId(user._id)) {
+        throw new Error(`User with email ${email} not found or has invalid ID`);
+      }
+
+      if (!participantIds.includes(user._id as Types.ObjectId)) {
+        participantIds.push(user._id as Types.ObjectId);
+      }
+    }
+
     const bet = new Bet({
       createdBy,
-      participants: [createdBy, request.participantIds!],
+      participants: participantIds,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       award,
     });
 
     return await bet.save();
+  }
+
+  async getUserBets(userId: Types.ObjectId): Promise<any | null> {
+    const bets = await Bet.find({ participants: userId })
+      .populate("participants", "name email")
+      .populate("createdBy", "name email");
+
+    if (!bets || bets.length === 0) {
+      return null;
+    }
+
+    const betDetails = await Promise.all(
+      bets.map(async (bet) => {
+        const participants = await Promise.all(
+          bet.participants.map(async (participant: any) => {
+            const totalPoints = await this.calculateTotalPoints(
+              participant._id
+            );
+            return {
+              name: participant.name,
+              email: participant.email,
+              totalPoints,
+            };
+          })
+        );
+
+        return {
+          id: bet._id,
+          createdBy: bet.createdBy,
+          participants,
+          startDate: bet.startDate,
+          endDate: bet.endDate,
+          award: bet.award,
+        };
+      })
+    );
+
+    return betDetails;
+  }
+
+  public async calculateTotalPoints(
+    userId: mongoose.Types.ObjectId
+  ): Promise<number> {
+    const records = await Record.find({ userId });
+    const totalPoints = records.reduce((sum, record) => sum + record.points, 0);
+    return totalPoints;
   }
 }

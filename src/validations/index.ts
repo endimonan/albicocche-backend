@@ -1,5 +1,11 @@
 import { BetLimitValidation } from "./BetLimitation";
-import { DateValidation } from "./DateValidation";
+import { DynamicDateValidation } from "./DateFormatValidation";
+import { DateRangeValidation } from "./DateRangeValidation";
 import { ParticipantValidation } from "./ParticipantsValidation";
 
-export { BetLimitValidation, DateValidation, ParticipantValidation };
+export {
+  BetLimitValidation,
+  DynamicDateValidation,
+  ParticipantValidation,
+  DateRangeValidation,
+};

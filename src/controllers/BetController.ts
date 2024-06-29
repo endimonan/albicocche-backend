@@ -30,4 +30,22 @@ export class BetController {
       return res.status(400).json({ message: (error as Error).message });
     }
   }
+
+  static async getUserBets(req: Request, res: Response): Promise<Response> {
+    try {
+      const userId = new mongoose.Types.ObjectId(req.params.userId);
+
+      const bets = await betService.getUserBets(userId);
+
+      if (!bets) {
+        return res.status(404).json({
+          message: "No bets found for this user",
+        });
+      }
+
+      return res.status(200).json(bets);
+    } catch (error) {
+      return res.status(400).json({ message: (error as Error).message });
+    }
+  }
 }
