@@ -10,11 +10,12 @@ export class RecordController {
       const userId = new mongoose.Types.ObjectId(req.body.user.userId);
 
       const { date, activity, ateFruit, observation } = req.body;
-      const points = RecordController.calculatePoints(activity, ateFruit);
+
+      const points = recordService.calculatePoints(activity, ateFruit);
 
       const record = await recordService.addRecord(
         userId,
-        new Date(date),
+        date,
         activity,
         ateFruit,
         observation,
@@ -24,7 +25,7 @@ export class RecordController {
       if (!record) {
         return res.status(400).json({
           message:
-            "Failed to adds record. It may be a duplicate or future date.",
+            "Failed to add record. Please check if the date is in the correct format and if a record already exists for this date.",
         });
       }
 
@@ -42,26 +43,5 @@ export class RecordController {
     } catch (error) {
       return res.status(400).json({ message: (error as Error).message });
     }
-  }
-
-  static calculatePoints(activity: string, ateFruit: boolean): number {
-    let points = 0;
-    switch (activity) {
-      case "ALL":
-        points += 3;
-        break;
-      case "GYM":
-        points += 2;
-        break;
-      case "WATER":
-        points += 1;
-        break;
-    }
-
-    if (ateFruit) {
-      points -= 1;
-    }
-
-    return points;
   }
 }
