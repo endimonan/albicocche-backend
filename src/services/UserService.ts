@@ -7,6 +7,7 @@ import { UpdateUserDTO } from "../dtos/UpdateUserDTO";
 export class UserService {
   async register(
     name: string,
+    surname: string,
     email: string,
     password: string
   ): Promise<UserDocument> {
@@ -20,6 +21,7 @@ export class UserService {
 
     const user = new User({
       name,
+      surname,
       email,
       password: hashedPassword,
       verificationCode,

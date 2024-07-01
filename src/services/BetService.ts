@@ -2,7 +2,6 @@ import Bet, { BetDocument } from "../models/Bet";
 import mongoose, { Types } from "mongoose";
 import User from "../models/User";
 import Record from "../models/Record";
-import { parseISO } from "date-fns";
 import {
   BetLimitValidation,
   DynamicDateValidation,
