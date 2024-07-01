@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
 import { UpdateUserDTO } from "../dtos/UpdateUserDTO";
+import User, { UserDocument } from "../models/User";
 
 const userService = new UserService();
 
 export class UserController {
   static async register(req: Request, res: Response): Promise<void> {
     try {
-      const { name, email, password } = req.body;
-      const user = await userService.register(name, email, password);
+      const { name, surname, email, password } = req.body;
+      const user = await userService.register(name, surname, email, password);
       res.status(201).json({ message: "User registered successfully", user });
     } catch (error) {
       res.status(400).json({ message: (error as Error).message });
@@ -57,6 +58,23 @@ export class UserController {
       const updates: UpdateUserDTO = req.body;
       const user = await userService.updateUser(userId, updates);
       res.status(200).json({ message: "User updated successfully", user });
+    } catch (error) {
+      res.status(400).json({ message: (error as Error).message });
+    }
+  }
+
+  static async profile(req: Request, res: Response): Promise<void> {
+    try {
+      const userId = req.body.user.userId;
+      const user = await User.findById(userId).select(
+        "-password -newEmail -verificationCode -emailVerificationCode"
+      );
+
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+      } else {
+        res.status(200).json(user);
+      }
     } catch (error) {
       res.status(400).json({ message: (error as Error).message });
     }
