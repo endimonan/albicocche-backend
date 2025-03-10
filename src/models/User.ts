@@ -11,6 +11,7 @@ export interface UserDocument extends Document {
   emailVerificationCode: string | null;
   records: mongoose.Types.ObjectId[];
   avatarUrl: string | null;
+  isAdmin: boolean;
 }
 
 const UserSchema = new Schema<UserDocument>({
@@ -24,6 +25,7 @@ const UserSchema = new Schema<UserDocument>({
   emailVerificationCode: { type: String, default: null },
   records: [{ type: mongoose.Schema.Types.ObjectId, ref: "Record" }],
   avatarUrl: { type: String, default: null },
+  isAdmin: { type: Boolean, default: false }
 });
 
 const User = mongoose.model<UserDocument>("User", UserSchema);
